@@ -16,6 +16,9 @@ for col in range(1,77):
 		index += 1
 columns = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal", "num"]
 df = pd.DataFrame(data=data, columns=columns)
-#print(df)
 print("Mean values: ")
 print(np.mean(df, 0))
+print("Median values: ")
+print(np.median(df, 0))
+print("Standard deviation: ")
+print(np.std(df, 0))
