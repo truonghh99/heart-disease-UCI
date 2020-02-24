@@ -9,6 +9,7 @@ data3 = np.genfromtxt('modified-data/switzerland.data')
 data4 = np.genfromtxt('modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 
+print(data[12][12])
 # Print description
 description = [
 	[1,"id","patient identification number","NOMINAL"],
@@ -114,17 +115,29 @@ print(np.std(df.select_dtypes(include=["float", 'int'])))
 # Plot 2 dimensional figures
 toDraw = [2,9,11,13,18,43]
 for i in toDraw:
-	plt.xlabel(description[i][1])
-	plt.ylabel(description[57][1])
-	plt.scatter(df_index[i], df_index[57],alpha=0.1)
+	ax = plt.axes(projection='3d')
+	ax.set_xlabel(description[i][1])
+	ax.set_ylabel(description[57][1])
+	ax.set_zlabel("count")
+	x = df_index[i];
+	y = df_index[57];
+	hist, xedges, yedges = np.histogram2d(x, y, bins=10, range=[[df_index[i].min(), df_index[i].max()], [df_index[57].min(), df_index[57].max()]])
+	xpos, ypos = np.meshgrid(xedges[:-1] + 0.1, yedges[:-1] + 0.1, indexing="ij")
+	xpos = xpos.ravel()
+	ypos = ypos.ravel()
+	zpos = 0
+	dx = (df_index[i].max() - df_index[i].min())/10 * np.ones_like(zpos)
+	dy = (df_index[57].max() - df_index[57].min())/10 * np.ones_like(zpos)
+	dz = hist.ravel()
+	ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average')
 	plt.show()
 
 # Plot 3 dimensional figures
-toDraw = [[3,10,57],[12,14,57],[19,44,57]]
+toDraw = [[2,9,57],[11,13,57],[18,43,57]]
 for i in toDraw:
 	ax = plt.axes(projection='3d')
 	ax.set_xlabel(description[i[0]][1])
 	ax.set_ylabel(description[i[1]][1])
 	ax.set_zlabel(description[i[2]][1])
-	ax.scatter3D(df_index[i[0]], df_index[i[1]], df_index[i[2]])
+	ax.scatter3D(df_index[i[0]], df_index[i[1]], df_index[i[2]], alpha = 0.5)
 	plt.show()
