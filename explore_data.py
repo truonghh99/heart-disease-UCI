@@ -6,6 +6,8 @@ data2 = np.genfromtxt('modified-data/hungarian.data')
 data3 = np.genfromtxt('modified-data/switzerland.data')
 data4 = np.genfromtxt('modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
+
+# Select 14 needed attributes
 needed = [3,4,9,10,12,16,19,32,38,40,41,44,51,58]
 index, deleted = 0, 0
 for col in range(1,77):
@@ -16,6 +18,11 @@ for col in range(1,77):
 		index += 1
 columns = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal", "num"]
 df = pd.DataFrame(data=data, columns=columns)
+
+# Select numerical attributes for calculation
+df.select_dtypes(include=["float", 'int'])
+
+# Calculate statiscal characteristics
 print("Mean values: ")
 print(np.mean(df, 0))
 print("Median values: ")
