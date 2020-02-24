@@ -19,6 +19,26 @@ for col in range(1,77):
 columns = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal", "num"]
 df = pd.DataFrame(data=data, columns=columns)
 
+# Print descriptions
+descriptions = {
+	"age - age in years" : "RATIO",
+	"sex - sex (1 = male; 0 = female)" : "NOMINAL",
+	"cp - chest pain type" : "NOMINAL",
+	"trestbps - resting blood pressure" : "RATIO",
+	"chol - serum cholestoral in mg/dl" : "RATIO",
+	"fbs - if fasting blood sugar > 120 mg/dl" : "NOMINAL",
+	"restecg - resting electrocardiographic results" : "ORDINAL",
+	"thalach - maximum heart rate achieved" : "RATIO",
+	"exang - exercise induced angina" : "NOMINAL",
+	"oldpeak - ST depression induced by exercise relative to rest" : "RATIO",
+	"slope - the slope of the peak exercise ST segment" : "ORDINAL",
+	"ca - number of major vessels (0-3) colored by flourosopy" : "RATIO",
+	"thal - 3 = normal; 6 = fixed defect; 7 = reversable defect" : "NOMINAL",
+	"num - diagnosis of heart disease (angiographic disease status)" : "NOMINAL"
+}
+for name, description in descriptions.items():
+    print(name," : ",description)
+
 # Select numerical attributes for calculation
 df.select_dtypes(include=["float", 'int'])
 
