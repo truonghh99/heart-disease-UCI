@@ -9,7 +9,8 @@ data3 = np.genfromtxt('modified-data/switzerland.data')
 data4 = np.genfromtxt('modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 
-print(data[12][12])
+
+
 # Print description
 description = [
 	[1,"id","patient identification number","NOMINAL"],
@@ -99,6 +100,10 @@ for row in description:
 df = pd.DataFrame(data=data, columns=columns)
 df_index = pd.DataFrame(data=data)
 
+# histogram for num
+plt.hist(df_index[57], bins=[-0.5, 0.5, 1.5, 2.5, 3.5, 4.5])
+plt.show()
+
 #simplify predicted value (num) from [0,4] to either 0 (absence) or 1 (presence)
 for index, row in df.iterrows():
 	if row[57] > 0:
@@ -112,7 +117,7 @@ print(np.median(df.select_dtypes(include=["float", 'int'])))
 print("Standard deviation: ")
 print(np.std(df.select_dtypes(include=["float", 'int'])))
 
-# Plot 2 dimensional figures
+# Plot 2 dimensional histogram (3d)
 toDraw = [2,9,11,13,18,43]
 for i in toDraw:
 	ax = plt.axes(projection='3d')
@@ -133,11 +138,11 @@ for i in toDraw:
 	plt.show()
 
 # Plot 3 dimensional figures
-toDraw = [[2,9,57],[11,13,57],[18,43,57]]
+toDraw = [[40,41,44],[3,4,9],[4,9,10],[10,12,16],[3,40,44]]
 for i in toDraw:
 	ax = plt.axes(projection='3d')
 	ax.set_xlabel(description[i[0]][1])
 	ax.set_ylabel(description[i[1]][1])
 	ax.set_zlabel(description[i[2]][1])
-	ax.scatter3D(df_index[i[0]], df_index[i[1]], df_index[i[2]], alpha = 0.5)
+	ax.scatter3D(df_index[i[0]], df_index[i[1]], df_index[i[2]], alpha = 0.5, c = df_index[57])
 	plt.show()
