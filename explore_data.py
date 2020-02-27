@@ -99,16 +99,16 @@ for row in description:
 	columns.append(row[1])
 df = pd.DataFrame(data=data, columns=columns)
 df_index = pd.DataFrame(data=data)
-
+"""
 # histogram for num
 plt.hist(df_index[57], bins=[-0.5, 0.5, 1.5, 2.5, 3.5, 4.5])
 plt.show()
-
+"""
 #simplify predicted value (num) from [0,4] to either 0 (absence) or 1 (presence)
 for index, row in df.iterrows():
 	if row[57] > 0:
 		row[57] = 1
-
+"""
 # Calculate statiscal characteristics
 print("Mean values: ")
 print(np.mean(df.select_dtypes(include=["float", 'int'])))
@@ -136,13 +136,13 @@ for i in toDraw:
 	dz = hist.ravel()
 	ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average')
 	plt.show()
-
+"""
 # Plot 3 dimensional figures
-toDraw = [[40,41,44],[3,4,9],[4,9,10],[10,12,16],[3,40,44]]
+toDraw = [[3,4,10],[35,34,41],[9,10,12]]
 for i in toDraw:
 	ax = plt.axes(projection='3d')
-	ax.set_xlabel(description[i[0]][1])
-	ax.set_ylabel(description[i[1]][1])
-	ax.set_zlabel(description[i[2]][1])
-	ax.scatter3D(df_index[i[0]], df_index[i[1]], df_index[i[2]], alpha = 0.5, c = df_index[57])
+	ax.set_xlabel(description[i[0] - 1][2])
+	ax.set_ylabel(description[i[1] - 1][2])
+	ax.set_zlabel(description[i[2] - 1][2])
+	ax.scatter3D(df_index[i[0] - 1], df_index[i[1] - 1], df_index[i[2] - 1], alpha = 0.5, c = df_index[57])
 	plt.show()
