@@ -7,6 +7,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score 
 from sklearn.metrics import classification_report    
 
+
 # import all data
 data = np.genfromtxt('modified-data/cleveland.data')
 data2 = np.genfromtxt('modified-data/hungarian.data')
@@ -36,7 +37,7 @@ testing = pd.DataFrame(testing)
 
 #split dataset in features and target variable
 
-feature_cols = [2,3,8,9,11,15,18,31,37,39,40,50]
+feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50]
 x_train = training[feature_cols]
 y_train = training[57] #target
 x_test = testing[feature_cols]
