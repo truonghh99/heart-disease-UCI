@@ -5,9 +5,9 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix 
 from sklearn.metrics import accuracy_score 
-from sklearn.metrics import classification_report     
+from sklearn.metrics import classification_report    
 
-# Create dataframe
+# import all data
 data = np.genfromtxt('modified-data/cleveland.data')
 data2 = np.genfromtxt('modified-data/hungarian.data')
 data3 = np.genfromtxt('modified-data/switzerland.data')
@@ -15,6 +15,7 @@ data4 = np.genfromtxt('modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 df = pd.DataFrame(data)
 
+# assign 66% of each type to training dataset
 num_type = [0,0,0,0,0]
 for index, row in df.iterrows():
 	num_type[int(row[57])] += 1
@@ -33,5 +34,19 @@ for index, row in df.iterrows():
 training = pd.DataFrame(training)
 testing = pd.DataFrame(testing)
 
-print(training)
-print(testing)
+#split dataset in features and target variable
+
+feature_cols = [2,3,8,9,11,15,18,31,37,39,40,50]
+x_train = training[feature_cols]
+y_train = training[57] #target
+x_test = testing[feature_cols]
+y_test = testing[57] #target
+
+# classification object
+clf = DecisionTreeClassifier()
+# Train Decision Tree Classifer
+clf = clf.fit(x_train,y_train)
+# predict the response for test dataset
+y_pred = clf.predict(x_test)
+
+print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
