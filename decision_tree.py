@@ -13,29 +13,25 @@ data2 = np.genfromtxt('modified-data/hungarian.data')
 data3 = np.genfromtxt('modified-data/switzerland.data')
 data4 = np.genfromtxt('modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
-needed = [3,4,9,10,12,16,19,32,38,40,41,44,51,58]
-index, deleted = 0, 0
-for col in range(1,77):
-	if index == 14 or col != needed[index]:
-		data = np.delete(data, col - deleted - 1, 1)
-		deleted += 1
+df = pd.DataFrame(data)
+
+num_type = [0,0,0,0,0]
+for index, row in df.iterrows():
+	num_type[int(row[57])] += 1
+
+num_test = [int(i * 0.66) for i in num_type]
+
+training, testing = [],[]
+
+for index, row in df.iterrows():
+	num_test[int(row[57])] -= 1
+	if (num_test[int(row[57])] >= 0):
+		training.append(row)
 	else:
-		index += 1
-columns = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal", "num"]
-df = pd.DataFrame(data=data, columns=columns)
+		testing.append(row)
 
-print(df)
-# Define target attribute (#13)
-X = df.values[:, 0:12]
-Y = df.values[:, 13]
+training = pd.DataFrame(training)
+testing = pd.DataFrame(testing)
 
-# Create training set
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, random_state = 100)
-
-# Build decision tree
-clf_gini = DecisionTreeClassifier(criterion = "gini", random_state = 100, max_depth=5, min_samples_leaf=5) 
-clf_gini.fit(X_train, y_train)
-
-print("Result using gini index: ")
-y_pred_gini = clf_gini.predict(X_test)
-print(y_pred_gini)
+print(training)
+print(testing)
