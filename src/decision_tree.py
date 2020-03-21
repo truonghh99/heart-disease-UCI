@@ -10,6 +10,8 @@ from sklearn import tree
 from sklearn.externals.six import StringIO  
 from IPython.display import Image  
 import pydotplus
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.feature_selection import SelectFromModel
 
 # import all data
 data = np.genfromtxt('../modified-data/cleveland.data')
@@ -18,7 +20,10 @@ data3 = np.genfromtxt('../modified-data/switzerland.data')
 data4 = np.genfromtxt('../modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 df = pd.DataFrame(data)
+df.replace([np.inf, -np.inf], np.nan, inplace=True)
+df.fillna(df.mean(), inplace=True)
 
+print(df.head())
 # assign 66% of each type to training dataset
 num_type = [0,0,0,0,0]
 for index, row in df.iterrows():
@@ -34,26 +39,33 @@ for index, row in df.iterrows():
 		training.append(row)
 	else:
 		testing.append(row)
-
+ 
 training = pd.DataFrame(training)
 testing = pd.DataFrame(testing)
 
 #split dataset in features and target variable
 
-feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50]
-x_train = training[feature_cols]
+x_train = training
+x_test = testing
+
+x_train = training.loc[:, 0:56]
 y_train = training[57] #target
-x_test = testing[feature_cols]
+x_test = testing.loc[:, 0:56]
 y_test = testing[57] #target
 
 # classification object
 clf = DecisionTreeClassifier()
-# Train Decision Tree Classifer
-clf = clf.fit(x_train,y_train)
-# predict the response for test dataset
-y_pred = clf.predict(x_test)
 
-print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+clf = clf.fit(x_train, y_train)
+y_pred = clf.predict(x_test)
+print("Accuracy using all features:", metrics.accuracy_score(y_test, y_pred))
+
+model = SelectFromModel(clf, prefit=True)
+x_train = model.transform(x_train)
+x_test = model.transform(x_test)
+clf = clf.fit(x_train, y_train)
+y_pred = clf.predict(x_test)
+print("Accuracy using selected features:", metrics.accuracy_score(y_test, y_pred))
 
 """
 # visualize decision tree
