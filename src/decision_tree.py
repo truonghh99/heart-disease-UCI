@@ -12,10 +12,10 @@ from IPython.display import Image
 import pydotplus
 
 # import all data
-data = np.genfromtxt('modified-data/cleveland.data')
-data2 = np.genfromtxt('modified-data/hungarian.data')
-data3 = np.genfromtxt('modified-data/switzerland.data')
-data4 = np.genfromtxt('modified-data/long-beach-va.data')
+data = np.genfromtxt('../modified-data/cleveland.data')
+data2 = np.genfromtxt('../modified-data/hungarian.data')
+data3 = np.genfromtxt('../modified-data/switzerland.data')
+data4 = np.genfromtxt('../modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 df = pd.DataFrame(data)
 
@@ -55,6 +55,7 @@ y_pred = clf.predict(x_test)
 
 print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
 
+"""
 # visualize decision tree
 dot_data = StringIO()
 tree.export_graphviz(clf, out_file=dot_data,  
@@ -63,3 +64,4 @@ tree.export_graphviz(clf, out_file=dot_data,
 graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
 graph.write_png('heart_diseases.png')
 Image(graph.create_png())
+"""
