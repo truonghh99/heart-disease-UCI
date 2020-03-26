@@ -25,6 +25,11 @@ df = pd.DataFrame(data)
 df.replace([np.inf, -np.inf], np.nan, inplace=True)
 df.fillna(df.mean(), inplace=True)
 
+#simplify predicted value (num) from [0,4] to either 0 (absence) or 1 (presence)
+for index, row in df.iterrows():
+	if row[57] > 0:
+		row[57] = 1
+
 # assign 66% of each type to training dataset
 num_type = [0,0]
 for index, row in df.iterrows():
@@ -62,6 +67,8 @@ print("Accuracy using decision tree:", metrics.accuracy_score(y_test, y_pred_dec
 print("Confusion matrix: ")
 print(confusion_matrix(y_test, y_pred_decision_tree))
 
+dt_disp = plot_roc_curve(clf_1, x_test, y_test)
+
 clf_2 = svm.SVC()
 clf_2.fit(x_train, y_train)
 y_pred_svm = clf_2.predict(x_test)
@@ -70,3 +77,7 @@ print("Accuracy using svm:", metrics.accuracy_score(y_test, y_pred_svm))
 print("Confusion matrix: ")
 print(confusion_matrix(y_test, y_pred_svm))
 
+ax = plt.gca()
+svm_disp = plot_roc_curve(clf_2, x_test, y_test, ax=ax)
+dt_disp.plot(ax=ax, alpha=0.8)
+plt.show()
