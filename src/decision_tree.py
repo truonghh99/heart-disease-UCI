@@ -12,6 +12,11 @@ from IPython.display import Image
 import pydotplus
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import SelectFromModel
+from sklearn.metrics import plot_roc_curve
+from sklearn.metrics import roc_curve
+from sklearn.metrics import auc
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 # import all data
 data = np.genfromtxt('../modified-data/cleveland.data')
@@ -44,6 +49,15 @@ testing = pd.DataFrame(testing)
 
 #split dataset in features and target variable
 
+feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50]
+x_train = training[feature_cols]
+y_train = training[57] #target
+x_test = testing[feature_cols]
+y_test = testing[57] #target
+
+'''
+#split dataset in features and target variable
+
 x_train = training
 x_test = testing
 
@@ -51,6 +65,7 @@ x_train = training.loc[:, 0:56]
 y_train = training[57] #target
 x_test = testing.loc[:, 0:56]
 y_test = testing[57] #target
+'''
 
 # classification object
 clf = DecisionTreeClassifier()
@@ -72,3 +87,34 @@ graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
 graph.write_png('heart_diseases.png')
 Image(graph.create_png())
 """
+
+def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize):
+    y_score = clf.predict_proba(X_test)
+
+    # structures
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+
+    # calculate dummies once
+    y_test_dummies = pd.get_dummies(y_test, drop_first=False).values
+    for i in range(n_classes):
+        fpr[i], tpr[i], _ = roc_curve(y_test_dummies[:, i], y_score[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+
+    # roc for each class
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.plot([0, 1], [0, 1], 'k--')
+    ax.set_xlim([0.0, 1.0])
+    ax.set_ylim([0.0, 1.05])
+    ax.set_xlabel('False Positive Rate')
+    ax.set_ylabel('True Positive Rate')
+    ax.set_title('Heart Disease Decision Tree Model performance')
+    for i in range(n_classes):
+        ax.plot(fpr[i], tpr[i], label='ROC curve (area = %0.2f) for label %i' % (roc_auc[i], i))
+    ax.legend(loc="best")
+    ax.grid(alpha=.4)
+    sns.despine()
+    plt.show()
+
+plot_multiclass_roc(clf, x_test, y_test, n_classes=5, figsize=(16, 10))
