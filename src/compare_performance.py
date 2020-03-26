@@ -7,11 +7,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score 
 from sklearn.metrics import classification_report    
 from sklearn import tree
-from sklearn.externals.six import StringIO  
-from IPython.display import Image  
-import pydotplus
 from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.feature_selection import SelectFromModel
+from sklearn import svm
 
 # import all data
 data = np.genfromtxt('../modified-data/cleveland.data')
@@ -44,31 +41,26 @@ testing = pd.DataFrame(testing)
 
 #split dataset in features and target variable
 
-x_train = training
-x_test = testing
-
-x_train = training.loc[:, 0:56]
+feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50]
+x_train = training[feature_cols]
 y_train = training[57] #target
-x_test = testing.loc[:, 0:56]
+x_test = testing[feature_cols]
 y_test = testing[57] #target
 
+
 # classification object
-clf = DecisionTreeClassifier()
+clf_1 = DecisionTreeClassifier()
 
-clf = clf.fit(x_train, y_train)
-y_pred = clf.predict(x_test)
-print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+clf_1= clf_1.fit(x_train, y_train)
+y_pred_decision_tree = clf_1.predict(x_test)
+print("Accuracy using decision tree:", metrics.accuracy_score(y_test, y_pred_decision_tree))
 print("Confusion matrix: ")
-print(confusion_matrix(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred_decision_tree))
 
+clf_2 = svm.SVC()
+clf_2.fit(x_train, y_train)
+y_pred_svm = clf_2.predict(x_test)
 
-"""
-# visualize decision tree
-dot_data = StringIO()
-tree.export_graphviz(clf, out_file=dot_data,  
-                filled=True, rounded=True,
-                special_characters=True,feature_names = feature_cols,class_names=['0','1','2','3','4'])
-graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
-graph.write_png('heart_diseases.png')
-Image(graph.create_png())
-"""
+print("Accuracy using svm:", metrics.accuracy_score(y_test, y_pred_svm))
+print("Confusion matrix: ")
+print(confusion_matrix(y_test, y_pred_svm))

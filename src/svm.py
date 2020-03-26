@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.metrics import accuracy_score 
 from sklearn import svm
+from sklearn.metrics import confusion_matrix
+
 
 # import all data
 data = np.genfromtxt('../modified-data/cleveland.data')
@@ -12,6 +14,7 @@ data3 = np.genfromtxt('../modified-data/switzerland.data')
 data4 = np.genfromtxt('../modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 df = pd.DataFrame(data)
+
 
 # assign 66% of each type to training dataset
 num_type = [0,0,0,0,0]
@@ -45,3 +48,5 @@ clf.fit(x_train, y_train)
 y_pred = clf.predict(x_test)
 
 print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+print("Confusion matrix: ")
+print(confusion_matrix(y_test, y_pred))
