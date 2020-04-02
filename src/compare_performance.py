@@ -51,12 +51,11 @@ testing = pd.DataFrame(testing)
 
 #split dataset in features and target variable
 
-feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50]
+feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50,51]
 x_train = training[feature_cols]
 y_train = training[57] #target
 x_test = testing[feature_cols]
 y_test = testing[57] #target
-
 
 # classification object
 clf_1 = DecisionTreeClassifier()
@@ -64,8 +63,10 @@ clf_1 = DecisionTreeClassifier()
 clf_1 = clf_1.fit(x_train, y_train)
 y_pred_decision_tree = clf_1.predict(x_test)
 print("Accuracy using decision tree:", metrics.accuracy_score(y_test, y_pred_decision_tree))
-print("Confusion matrix: ")
+print("Confusion matrix on testing set: ")
 print(confusion_matrix(y_test, y_pred_decision_tree))
+print("Confusion matrix on training set: ")
+print(confusion_matrix(y_train, clf_1.predict(x_train)))
 
 dt_disp = plot_roc_curve(clf_1, x_test, y_test)
 
@@ -74,10 +75,58 @@ clf_2.fit(x_train, y_train)
 y_pred_svm = clf_2.predict(x_test)
 
 print("Accuracy using svm:", metrics.accuracy_score(y_test, y_pred_svm))
-print("Confusion matrix: ")
+print("Confusion matrix on testing set: ")
 print(confusion_matrix(y_test, y_pred_svm))
+print("Confusion matrix on training set: ")
+print(confusion_matrix(y_train, clf_2.predict(x_train)))
 
+# Compare confusion matrices
+dt_true_positive, svm_true_positive = [], []
+dt_false_positive, svm_false_positive = [], []
+dt_true_negative, svm_true_negative = [], []
+dt_false_negative, svm_false_negative = [], []
+
+index = 0
+for i in y_test:
+	if (i == 1):
+		if (y_pred_decision_tree[index] == 1):
+			dt_true_positive.append(index)
+		else:
+			dt_false_negative.append(index)
+		if (y_pred_svm[index] == 1):
+			svm_true_positive.append(index)
+		else:
+			svm_false_negative.append(index)
+	else:
+		if (y_pred_decision_tree[index] == 0):
+			dt_true_negative.append(index)
+		else:
+			dt_false_positive.append(index)
+		if (y_pred_svm[index] == 0):
+			svm_true_negative.append(index)
+		else:
+			svm_false_positive.append(index)
+	index += 1
+
+def intersection(lst1, lst2): 
+    return list(set(lst1) & set(lst2))
+
+col = [dt_true_positive, dt_false_positive, dt_true_negative, dt_false_negative]
+row = [svm_true_positive, svm_false_positive, svm_true_negative, svm_false_negative]
+compare_matrix = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+
+for i  in range (4):
+	for j in range (4):
+		compare_matrix[i][j] = len(intersection(row[i], col[j]))
+
+compare_matrix = pd.DataFrame(compare_matrix, 
+								index = ['svm_true_positive', 'svm_false_positive', 'svm_true_negative', 'svm_false_negative'],
+								columns = ['dt_true_positive', 'dt_false_positive', 'dt_true_negative', 'dt_false_negative'])
+print('Compare matrix: ')
+print(compare_matrix)
+
+# plot roc curve
 ax = plt.gca()
 svm_disp = plot_roc_curve(clf_2, x_test, y_test, ax=ax)
 dt_disp.plot(ax=ax, alpha=0.8)
-plt.show()
+#plt.show()
