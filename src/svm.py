@@ -51,13 +51,11 @@ y_train = training[57] #target
 x_test = testing[feature_cols]
 y_test = testing[57] #target
 
-clf = svm.SVC()
+clf = svm.SVC(kernel = 'rbf')
 clf.fit(x_train, y_train)
 y_pred = clf.predict(x_test)
 
 print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
-print("Confusion matrix: ")
-print(confusion_matrix(y_test, y_pred))
 
 def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize):
     y_score = clf.decision_function(X_test)

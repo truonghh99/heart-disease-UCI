@@ -66,16 +66,41 @@ y_train = training[57] #target
 x_test = testing.loc[:, 0:56]
 y_test = testing[57] #target
 '''
+def train_using_gini(X_train, X_test, y_train): 
+  
+    # Creating the classifier object 
+    clf_gini = DecisionTreeClassifier(criterion = "gini", splitter = "best",
+            max_depth=5, min_samples_leaf=10) 
+  
+    # Performing training 
+    clf_gini.fit(X_train, y_train) 
+    return clf_gini 
+      
+# Function to perform training with entropy. 
+def tarin_using_entropy(X_train, X_test, y_train): 
+  
+    # Decision tree with entropy 
+    clf_entropy = DecisionTreeClassifier( 
+            criterion = "entropy", splitter = "best",
+            max_depth = 5, min_samples_leaf = 10) 
+  
+    # Performing training 
+    clf_entropy.fit(X_train, y_train) 
+    return clf_entropy 
+
+clf_gini = train_using_gini(x_train, x_test, y_train) 
+clf_entropy = tarin_using_entropy(x_train, x_test, y_train)
 
 # classification object
-clf = DecisionTreeClassifier()
 
-clf = clf.fit(x_train, y_train)
-y_pred = clf.predict(x_test)
-print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
-print("Confusion matrix: ")
-print(confusion_matrix(y_test, y_pred))
+clf_gini = clf_gini.fit(x_train, y_train)
+clf_entropy = clf_entropy.fit(x_train, y_train)
 
+y_pred_gini = clf_gini.predict(x_test)
+y_pred_entropy = clf_entropy.predict(x_test)
+
+print("Accuracy using gini:", metrics.accuracy_score(y_test, y_pred_gini))
+print("Accuracy using entropy:", metrics.accuracy_score(y_test, y_pred_entropy))
 
 """
 # visualize decision tree
@@ -117,4 +142,4 @@ def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize):
     sns.despine()
     plt.show()
 
-plot_multiclass_roc(clf, x_test, y_test, n_classes=5, figsize=(16, 10))
+plot_multiclass_roc(clf_gini, x_test, y_test, n_classes=5, figsize=(16, 10))

@@ -58,7 +58,9 @@ x_test = testing[feature_cols]
 y_test = testing[57] #target
 
 # classification object
-clf_1 = DecisionTreeClassifier()
+clf_1 = DecisionTreeClassifier( 
+            criterion = "gini", splitter = "best",
+            max_depth = 4, min_samples_leaf = 20, class_weight = {0:2, 1:1})
 
 clf_1 = clf_1.fit(x_train, y_train)
 y_pred_decision_tree = clf_1.predict(x_test)
@@ -70,7 +72,7 @@ print(confusion_matrix(y_train, clf_1.predict(x_train)))
 
 dt_disp = plot_roc_curve(clf_1, x_test, y_test)
 
-clf_2 = svm.SVC()
+clf_2 = svm.SVC(kernel='poly', probability = True, class_weight = {0:1.5, 1:1})
 clf_2.fit(x_train, y_train)
 y_pred_svm = clf_2.predict(x_test)
 
@@ -129,4 +131,4 @@ print(compare_matrix)
 ax = plt.gca()
 svm_disp = plot_roc_curve(clf_2, x_test, y_test, ax=ax)
 dt_disp.plot(ax=ax, alpha=0.8)
-#plt.show()
+plt.show()
