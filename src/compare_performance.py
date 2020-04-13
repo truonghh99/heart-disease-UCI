@@ -82,6 +82,17 @@ print(confusion_matrix(y_test, y_pred_svm))
 print("Confusion matrix on training set: ")
 print(confusion_matrix(y_train, clf_2.predict(x_train)))
 
+
+clf_3 = 
+clf_2.fit(x_train, y_train)
+y_pred_svm = clf_2.predict(x_test)
+
+print("Accuracy using svm:", metrics.accuracy_score(y_test, y_pred_svm))
+print("Confusion matrix on testing set: ")
+print(confusion_matrix(y_test, y_pred_svm))
+print("Confusion matrix on training set: ")
+print(confusion_matrix(y_train, clf_2.predict(x_train)))
+
 # Compare confusion matrices
 dt_true_positive, svm_true_positive = [], []
 dt_false_positive, svm_false_positive = [], []

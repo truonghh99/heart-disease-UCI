@@ -1,14 +1,16 @@
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
 from sklearn import metrics
+from sklearn.metrics import confusion_matrix 
 from sklearn.metrics import accuracy_score 
-from sklearn import svm
-from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report    
 from sklearn import tree
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn import svm
+from sklearn.externals.six import StringIO  
+from IPython.display import Image  
+import pydotplus
+from sklearn.neural_network import MLPClassifier
+from sklearn.feature_selection import SelectFromModel
 from sklearn.metrics import plot_roc_curve
 from sklearn.metrics import roc_curve
 from sklearn.metrics import auc
@@ -22,7 +24,8 @@ data3 = np.genfromtxt('../modified-data/switzerland.data')
 data4 = np.genfromtxt('../modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 df = pd.DataFrame(data)
-
+df.replace([np.inf, -np.inf], np.nan, inplace=True)
+df.fillna(df.mean(), inplace=True)
 
 # assign 66% of each type to training dataset
 num_type = [0,0,0,0,0]
@@ -39,7 +42,7 @@ for index, row in df.iterrows():
 		training.append(row)
 	else:
 		testing.append(row)
-
+ 
 training = pd.DataFrame(training)
 testing = pd.DataFrame(testing)
 
@@ -51,14 +54,15 @@ y_train = training[57] #target
 x_test = testing[feature_cols]
 y_test = testing[57] #target
 
-clf = svm.SVC(kernel = 'rbf')
+
+clf = MLPClassifier()
 clf.fit(x_train, y_train)
 y_pred = clf.predict(x_test)
 
 print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
 
 def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize):
-    y_score = clf.decision_function(X_test)
+    y_score = clf.predict_proba(X_test)
 
     # structures
     fpr = dict()
