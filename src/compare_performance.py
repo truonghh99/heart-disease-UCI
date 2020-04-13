@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report    
 from sklearn import tree
 from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn import svm
 from sklearn.metrics import plot_roc_curve
 from sklearn.metrics import roc_curve
@@ -70,7 +71,6 @@ print(confusion_matrix(y_test, y_pred_decision_tree))
 print("Confusion matrix on training set: ")
 print(confusion_matrix(y_train, clf_1.predict(x_train)))
 
-dt_disp = plot_roc_curve(clf_1, x_test, y_test)
 
 clf_2 = svm.SVC(kernel='poly', probability = True, class_weight = {0:1.5, 1:1})
 clf_2.fit(x_train, y_train)
@@ -83,15 +83,16 @@ print("Confusion matrix on training set: ")
 print(confusion_matrix(y_train, clf_2.predict(x_train)))
 
 
-clf_3 = 
-clf_2.fit(x_train, y_train)
-y_pred_svm = clf_2.predict(x_test)
+clf_3 = MLPClassifier()
+clf_3.fit(x_train, y_train)
+y_pred_nn = clf_3.predict(x_test)
 
-print("Accuracy using svm:", metrics.accuracy_score(y_test, y_pred_svm))
+print("Accuracy using neural network:", metrics.accuracy_score(y_test, y_pred_nn))
 print("Confusion matrix on testing set: ")
-print(confusion_matrix(y_test, y_pred_svm))
+print(confusion_matrix(y_test, y_pred_nn))
 print("Confusion matrix on training set: ")
-print(confusion_matrix(y_train, clf_2.predict(x_train)))
+print(confusion_matrix(y_train, clf_3.predict(x_train)))
+
 
 # Compare confusion matrices
 dt_true_positive, svm_true_positive = [], []
@@ -140,6 +141,8 @@ print(compare_matrix)
 
 # plot roc curve
 ax = plt.gca()
+dt_disp = plot_roc_curve(clf_1, x_test, y_test)
 svm_disp = plot_roc_curve(clf_2, x_test, y_test, ax=ax)
+nn_disp = plot_roc_curve(clf_3, x_test, y_test, ax=ax)
 dt_disp.plot(ax=ax, alpha=0.8)
 plt.show()
