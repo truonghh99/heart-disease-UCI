@@ -28,6 +28,7 @@ class decision_tree:
     y_pred = clf.predict(x_test)
 
     accuracy = metrics.accuracy_score(y_test, y_pred)
+    confusion_matrix = confusion_matrix(y_test, y_pred)    
 
     # visualize decision tree
     feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50,51]

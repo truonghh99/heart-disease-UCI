@@ -19,10 +19,18 @@ from decision_tree import decision_tree
 from svm import svm_model
 
 class performance_evaluation:
-	# Compare accuracy
+	# accuracy
 	print("Accuracy using decision_tree:", decision_tree.accuracy)
 	print("Accuracy using svm:", svm_model.accuracy)
 	print("Accuracy using neural network:", neural_network.accuracy)
+
+	# confusion matrix
+	print("Confusion matrix using decision_tree:")
+	print(decision_tree.confusion_matrix)
+	print("Confusion matrix using svm:")
+	print(svm_model.confusion_matrix)
+	print("Confusion matrix using neural network:")
+	print(neural_network.confusion_matrix)
 
 	# Compare confusion matrices
 	dt_true_positive, svm_true_positive = [], []

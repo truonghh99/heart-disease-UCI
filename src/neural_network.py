@@ -18,3 +18,4 @@ class neural_network:
     y_pred = clf.predict(x_test)
 
     accuracy = metrics.accuracy_score(y_test, y_pred)
+    confusion_matrix = confusion_matrix(y_test, y_pred)
