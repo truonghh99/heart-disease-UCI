@@ -14,6 +14,7 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import auc
 from matplotlib import pyplot as plt
 import seaborn as sns
+from preprocessing import preprocessing
 from neural_network import neural_network
 from decision_tree import decision_tree
 from svm import svm_model
@@ -32,7 +33,12 @@ class performance_evaluation:
 	print("Confusion matrix using neural network:")
 	print(neural_network.confusion_matrix)
 
-	# Compare confusion matrices
+	# compare confusion matrices
+	x_train = preprocessing.x_train
+	y_train = preprocessing.y_train
+	x_test = preprocessing.x_test
+	y_test = preprocessing.y_test
+
 	dt_true_positive, svm_true_positive = [], []
 	dt_false_positive, svm_false_positive = [], []
 	dt_true_negative, svm_true_negative = [], []
@@ -41,27 +47,27 @@ class performance_evaluation:
 	index = 0
 	for i in y_test:
 		if (i == 1):
-			if (y_pred_decision_tree[index] == 1):
+			if (decision_tree.y_pred[index] == 1):
 				dt_true_positive.append(index)
 			else:
 				dt_false_negative.append(index)
-			if (y_pred_svm[index] == 1):
+			if (svm_model.y_pred[index] == 1):
 				svm_true_positive.append(index)
 			else:
 				svm_false_negative.append(index)
 		else:
-			if (y_pred_decision_tree[index] == 0):
+			if (decision_tree.y_pred[index] == 0):
 				dt_true_negative.append(index)
 			else:
 				dt_false_positive.append(index)
-			if (y_pred_svm[index] == 0):
+			if (svm_model.y_pred[index] == 0):
 				svm_true_negative.append(index)
 			else:
 				svm_false_positive.append(index)
 		index += 1
 
 	def intersection(lst1, lst2): 
-	    return list(set(lst1) & set(lst2))
+		return list(set(lst1) & set(lst2))
 
 	col = [dt_true_positive, dt_false_positive, dt_true_negative, dt_false_negative]
 	row = [svm_true_positive, svm_false_positive, svm_true_negative, svm_false_negative]
@@ -79,8 +85,8 @@ class performance_evaluation:
 
 	# plot roc curve
 	ax = plt.gca()
-	dt_disp = plot_roc_curve(clf_1, x_test, y_test)
-	svm_disp = plot_roc_curve(clf_2, x_test, y_test, ax=ax)
-	nn_disp = plot_roc_curve(clf_3, x_test, y_test, ax=ax)
+	dt_disp = plot_roc_curve(decision_tree.clf, x_test, y_test)
+	svm_disp = plot_roc_curve(svm_model.clf, x_test, y_test, ax=ax)
+	nn_disp = plot_roc_curve(neural_network.clf, x_test, y_test, ax=ax)
 	dt_disp.plot(ax=ax, alpha=0.8)
 	plt.show()
