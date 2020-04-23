@@ -33,60 +33,69 @@ class performance_evaluation:
 	print("Confusion matrix using neural network:")
 	print(neural_network.confusion_matrix)
 
-	# compare confusion matrices
 	x_train = preprocessing.x_train
 	y_train = preprocessing.y_train
 	x_test = preprocessing.x_test
 	y_test = preprocessing.y_test
 
-	dt_true_positive, svm_true_positive = [], []
-	dt_false_positive, svm_false_positive = [], []
-	dt_true_negative, svm_true_negative = [], []
-	dt_false_negative, svm_false_negative = [], []
+	# compare confusion matrices
+	def compare_confusion_matrices(a, b, a_name, b_name):
+		print("Compare confusion matrices between (a) - ", a_name," - and (b) - ", b_name)
 
-	index = 0
-	for i in y_test:
-		if (i == 1):
-			if (decision_tree.y_pred[index] == 1):
-				dt_true_positive.append(index)
+		x_train = preprocessing.x_train
+		y_train = preprocessing.y_train
+		x_test = preprocessing.x_test
+		y_test = preprocessing.y_test
+
+		a_true_positive, b_true_positive = [], []
+		a_false_positive, b_false_positive = [], []
+		a_true_negative, b_true_negative = [], []
+		a_false_negative, b_false_negative = [], []
+
+		index = 0
+		for i in y_test:
+			if (i == 1):
+				if (a.y_pred[index] == 1):
+					a_true_positive.append(index)
+				else:
+					a_false_negative.append(index)
+				if (b.y_pred[index] == 1):
+					b_true_positive.append(index)
+				else:
+					b_false_negative.append(index)
 			else:
-				dt_false_negative.append(index)
-			if (svm_model.y_pred[index] == 1):
-				svm_true_positive.append(index)
-			else:
-				svm_false_negative.append(index)
-		else:
-			if (decision_tree.y_pred[index] == 0):
-				dt_true_negative.append(index)
-			else:
-				dt_false_positive.append(index)
-			if (svm_model.y_pred[index] == 0):
-				svm_true_negative.append(index)
-			else:
-				svm_false_positive.append(index)
-		index += 1
+				if (a.y_pred[index] == 0):
+					a_true_negative.append(index)
+				else:
+					a_false_positive.append(index)
+				if (b.y_pred[index] == 0):
+					b_true_negative.append(index)
+				else:
+					b_false_positive.append(index)
+			index += 1
 
-	def intersection(lst1, lst2): 
-		return list(set(lst1) & set(lst2))
+		def intersection(lst1, lst2): 
+			return list(set(lst1) & set(lst2))
 
-	col = [dt_true_positive, dt_false_positive, dt_true_negative, dt_false_negative]
-	row = [svm_true_positive, svm_false_positive, svm_true_negative, svm_false_negative]
-	compare_matrix = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+		col = [a_true_positive, a_false_positive, a_true_negative, a_false_negative]
+		row = [b_true_positive, b_false_positive, b_true_negative, b_false_negative]
+		compare_matrix = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 
-	for i  in range (4):
-		for j in range (4):
-			compare_matrix[i][j] = len(intersection(row[i], col[j]))
+		for i  in range (4):
+			for j in range (4):
+				compare_matrix[i][j] = len(intersection(row[i], col[j]))
 
-	compare_matrix = pd.DataFrame(compare_matrix, 
-									index = ['svm_true_positive', 'svm_false_positive', 'svm_true_negative', 'svm_false_negative'],
-									columns = ['dt_true_positive', 'dt_false_positive', 'dt_true_negative', 'dt_false_negative'])
-	print('Compare matrix: ')
-	print(compare_matrix)
+		compare_matrix = pd.DataFrame(compare_matrix, 
+										index = ['b_true_positive', 'b_false_positive', 'b_true_negative', 'b_false_negative'],
+										columns = ['a_true_positive', 'a_false_positive', 'a_true_negative', 'a_false_negative'])
+		print(compare_matrix)
 
+	compare_confusion_matrices(decision_tree, svm_model, "decision_tree", "svm")
+	compare_confusion_matrices(decision_tree, neural_network, "decision_tree", "neural network")
+	compare_confusion_matrices(neural_network, svm_model, "neural network", "svm")
 	# plot roc curve
 	ax = plt.gca()
-	dt_disp = plot_roc_curve(decision_tree.clf, x_test, y_test)
+	dt_disp = plot_roc_curve(decision_tree.clf, x_test, y_test, ax=ax)
 	svm_disp = plot_roc_curve(svm_model.clf, x_test, y_test, ax=ax)
 	nn_disp = plot_roc_curve(neural_network.clf, x_test, y_test, ax=ax)
-	dt_disp.plot(ax=ax, alpha=0.8)
 	plt.show()

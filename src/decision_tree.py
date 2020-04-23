@@ -21,17 +21,16 @@ class decision_tree:
     y_test = preprocessing.y_test
       
     # Decision tree with entropy 
-    clf= DecisionTreeClassifier( 
-                criterion = "entropy", splitter = "best",
-                max_depth = 5, min_samples_leaf = 10) 
+    clf= DecisionTreeClassifier(min_samples_split = 0.035) 
     clf = clf.fit(x_train, y_train)
     y_pred = clf.predict(x_test)
 
     accuracy = metrics.accuracy_score(y_test, y_pred)
     confusion_matrix = confusion_matrix(y_test, y_pred)    
 
+"""
     # visualize decision tree
-    feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50,51]
+    feature_cols = [3,8,11,15,18,31,37,39,40,43,50,51]
     dot_data = StringIO()
     tree.export_graphviz(clf, out_file=dot_data,  
                     filled=True, rounded=True,
@@ -39,3 +38,4 @@ class decision_tree:
     graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
     graph.write_png('heart_diseases.png')
     Image(graph.create_png())
+"""

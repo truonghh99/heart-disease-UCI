@@ -3,13 +3,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 
-data = np.genfromtxt('modified-data/cleveland.data')
-data2 = np.genfromtxt('modified-data/hungarian.data')
-data3 = np.genfromtxt('modified-data/switzerland.data')
-data4 = np.genfromtxt('modified-data/long-beach-va.data')
+data = np.genfromtxt('../modified-data/cleveland.data')
+data2 = np.genfromtxt('../modified-data/hungarian.data')
+data3 = np.genfromtxt('../modified-data/switzerland.data')
+data4 = np.genfromtxt('../modified-data/long-beach-va.data')
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 
 # Print description
+"""
 description = [
 	[1,"id","patient identification number","NOMINAL"],
 	[2,"ccf","social security number","NOMINAL"],
@@ -90,7 +91,7 @@ description = [
 
 for row in description:
     print(row[0]," : ",row[1]," : ",row[2]," : ",row[3])
-
+"""
 # create dataframe
 columns = []
 for row in description:

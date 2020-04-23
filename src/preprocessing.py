@@ -38,8 +38,17 @@ class preprocessing:
 
 	#split dataset in features and target variable
 
-	feature_cols = [2,3,8,11,15,18,31,37,39,40,43,50,51]
+	feature_cols = [3,8,11,15,18,31,37,39,40,43,50,51]
 	x_train = training[feature_cols]
 	y_train = training[57] #target
 	x_test = testing[feature_cols]
 	y_test = testing[57] #target
+
+	
+	x_train_all = training
+	x_test_all = testing
+	x_train_all = training.loc[:, 0:56]
+	y_train_all = training[57] #target
+	x_test_all = testing.loc[:, 0:56]
+	y_test_all = testing[57] #target
+	

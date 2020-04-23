@@ -22,7 +22,7 @@ class svm_model:
     x_test = preprocessing.x_test
     y_test = preprocessing.y_test
 
-    clf = svm.SVC()
+    clf = svm.SVC(kernel = "linear")
     clf.fit(x_train, y_train)
     y_pred = clf.predict(x_test)
 
