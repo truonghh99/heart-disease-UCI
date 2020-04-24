@@ -7,10 +7,13 @@ data = np.genfromtxt('../modified-data/cleveland.data')
 data2 = np.genfromtxt('../modified-data/hungarian.data')
 data3 = np.genfromtxt('../modified-data/switzerland.data')
 data4 = np.genfromtxt('../modified-data/long-beach-va.data')
+print(data.size)
+print(data2.size)
+print(data3.size)
+print(data4.size)
 data = np.concatenate((data,data2,data3,data4), axis = 0)
 
 # Print description
-"""
 description = [
 	[1,"id","patient identification number","NOMINAL"],
 	[2,"ccf","social security number","NOMINAL"],
@@ -88,7 +91,7 @@ description = [
 	[74,"cathef", "not used", "UNDEFINED"],
 	[75,"junk", "not used", "UNDEFINED"],
 	[76,"name", "not used", "UNDEFINED"]]
-
+"""
 for row in description:
     print(row[0]," : ",row[1]," : ",row[2]," : ",row[3])
 """

@@ -11,6 +11,7 @@ class preprocessing:
 	df = pd.DataFrame(data)
 	df.replace([np.inf, -np.inf], np.nan, inplace=True)
 	df.fillna(df.mean(), inplace=True)
+	df = df.sample(frac=1).reset_index(drop=True)
 
 	#simplify predicted value (num) from [0,4] to either 0 (absence) or 1 (presence)
 	for index, row in df.iterrows():
